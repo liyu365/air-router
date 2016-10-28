@@ -6,6 +6,7 @@ window.airRouter = (function () {
         }
 
         this.routes = {};
+        this.defaultHash = null;
 
         this.when = function (route, callback) {
             this.routes[route] = {
@@ -13,6 +14,11 @@ window.airRouter = (function () {
                 callback: callback,
                 regexp: this.packageRegexp(route)
             };
+            return this;
+        };
+
+        this.otherwise = function (hash) {
+            this.defaultHash = hash;
             return this;
         };
 
@@ -24,8 +30,12 @@ window.airRouter = (function () {
                         };
                     var params = this.getParams(routes[route].regexp, hash);
                     callback.apply(routes[route], params);
-                    break;
+                    return;
                 }
+            }
+            if (typeof this.defaultHash === 'string') {
+                location.hash = '#' + this.defaultHash;
+                this.trigger(this.defaultHash);
             }
         };
 
@@ -33,9 +43,19 @@ window.airRouter = (function () {
             var _this = this;
             var hash = location.hash.slice(1);
             _this.trigger(hash);
-            window.addEventListener('hashchange', function () {
-                _this.trigger(location.hash.slice(1));
-            });
+            var oldHash = location.hash;
+            if ("onhashchange" in window.document.body) {
+                window.addEventListener('hashchange', function () {
+                    _this.trigger(location.hash.slice(1));
+                });
+            } else {
+                setInterval(function () {
+                    if (oldHash != location.hash) {
+                        oldHash = location.hash;
+                        _this.trigger(location.hash.slice(1));
+                    }
+                }, 100);
+            }
         };
 
         /**
