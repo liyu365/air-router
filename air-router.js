@@ -38,6 +38,9 @@ window.airRouter = (function () {
                     return;
                 }
             }
+            if (hash === this.defaultHash) {
+                throw Error('otherwise()方法中传入的hash没有定义对应的路由');
+            }
             if (typeof this.defaultHash === 'string') {
                 location.hash = '#' + this.defaultHash;
                 this.trigger(this.defaultHash);
