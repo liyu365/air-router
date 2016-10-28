@@ -11,7 +11,7 @@
 * `*`后面的所有字符都视为通配
 * `otherwise()`方法用于设置默认hash
 
-示例：
+示例[(演示地址)](https://liyu365.github.io/air-router/demo)：
 
 ```
 var router = airRouter();
