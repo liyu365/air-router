@@ -4,27 +4,6 @@
     <meta charset="UTF-8">
     <title>ari-router demo</title>
     <script src="../air-router.js"></script>
-    <script>
-        var airRouter = new airRouter();
-        airRouter.on('/',function(){
-            print_info('匹配根路径');
-        });
-        airRouter.on('/news/',function(){
-            print_info('匹配/news/');
-        });
-        airRouter.on('/news/:id',function(id){
-            print_info('id为'+ id);
-        });
-        airRouter.on('/order/*',function(starString){
-            print_info('*的值为' + starString)
-        });
-        airRouter.init();
-
-        function print_info(info){
-            var info_w = document.getElementById('info_w');
-            info_w.innerHTML = info;
-        }
-    </script>
 </head>
 <body>
 
@@ -38,5 +17,25 @@
 
 <div id="info_w"></div>
 
+
+<script>
+    var router = new airRouter();
+    router.when('/', function () {
+        print_info('匹配根路径');
+    }).when('/news/', function () {
+        print_info('匹配/news/');
+        console.log(this);
+    }).when('/news/:id', function (id) {
+        print_info('id为' + id);
+    }).when('/order/*', function (starString) {
+        print_info('*的值为' + starString)
+    }).start();
+
+
+    function print_info(info) {
+        var info_w = document.getElementById('info_w');
+        info_w.innerHTML = info;
+    }
+</script>
 </body>
 </html>
