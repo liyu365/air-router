@@ -38,7 +38,7 @@
     }).when('/news/', function () {
         print_info('匹配/news/');
     }).when('/news/:category(/:id)', function (category, id) {
-        print_info('category值为' + category + '，id值为' + (typeof id === 'undefined' ? '无' : id));
+        print_info('category值为' + category + '，id值为' + (!id ? '无' : id));
     }).when('/order/*', function (starString) {
         print_info('*的值为' + starString)
     }).otherwise('/').start();

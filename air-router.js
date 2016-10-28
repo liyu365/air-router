@@ -28,6 +28,7 @@ window.airRouter = (function () {
         };
 
         this.trigger = function (hash) {
+            var hash = hash.replace(/\?.*/,'');
             var routes = this.routes;
             for (var route in routes) {
                 if (routes[route].regexp.test(hash)) {
