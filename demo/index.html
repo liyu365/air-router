@@ -19,7 +19,7 @@
 
 
 <script>
-    var router = new airRouter();
+    var router = airRouter();
     router.when('/', function () {
         print_info('匹配根路径');
     }).when('/news/', function () {
@@ -30,7 +30,6 @@
     }).when('/order/*', function (starString) {
         print_info('*的值为' + starString)
     }).otherwise('/news/100').start();
-
 
     function print_info(info) {
         var info_w = document.getElementById('info_w');

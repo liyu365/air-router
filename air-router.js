@@ -1,8 +1,13 @@
 window.airRouter = (function () {
     var instance;
-    return function () {
+
+    function Singleton() {
         if (instance) {
             return instance;
+        } else {
+            if (!(this instanceof Singleton)) {
+                return new Singleton();
+            }
         }
 
         this.routes = {};
@@ -87,4 +92,6 @@ window.airRouter = (function () {
 
         instance = this;
     }
+
+    return Singleton;
 })();
