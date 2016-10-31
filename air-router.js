@@ -11,7 +11,7 @@ window.airRouter = (function () {
         }
 
         this.routes = {};
-        this.defaultHash = null;
+        this.defaultPath = null;
 
         this.when = function (route, callback) {
             this.routes[route] = {
@@ -19,39 +19,40 @@ window.airRouter = (function () {
                 callback: callback,
                 regexp: this.packageRegexp(route)
             };
+            console.log(this.packageRegexp(route));
             return this;
         };
 
-        this.otherwise = function (hash) {
-            this.defaultHash = hash;
+        this.otherwise = function (path) {
+            this.defaultPath = path;
             return this;
         };
 
-        this.trigger = function (hash) {
-            var hash = hash.replace(/\?.*/,'');
+        this.trigger = function (path) {
+            var path = path.replace(/\?.*/, '');
             var routes = this.routes;
             for (var route in routes) {
-                if (routes[route].regexp.test(hash)) {
+                if (routes[route].regexp.test(path)) {
                     var callback = routes[route].callback || function () {
                         };
-                    var params = this.getParams(routes[route].regexp, hash);
+                    var params = this.getParams(routes[route].regexp, path);
                     callback.apply(routes[route], params);
                     return;
                 }
             }
-            if (hash === this.defaultHash) {
+            if (path === this.defaultPath) {
                 throw Error('otherwise()方法中传入的hash没有定义对应的路由');
             }
-            if (typeof this.defaultHash === 'string') {
-                location.hash = '#' + this.defaultHash;
-                this.trigger(this.defaultHash);
+            if (typeof this.defaultPath === 'string') {
+                location.hash = '#' + this.defaultPath;
+                this.trigger(this.defaultPath);
             }
         };
 
         this.start = function () {
             var _this = this;
-            var hash = location.hash.slice(1);
-            _this.trigger(hash);
+            var path = location.hash.slice(1);
+            _this.trigger(path);
             var oldHash = location.hash;
             if ("onhashchange" in window.document.body) {
                 window.addEventListener('hashchange', function () {
@@ -84,14 +85,14 @@ window.airRouter = (function () {
          */
         this.packageRegexp = function (route) {
             route = route.replace(/[.?+\-^$\[\]{}|\/]/g, '\\$&')  //注意，正则中表示字符集和的[]中除了 [ ] - 这三个字符，其他的的特殊字符不用在前面加转义字符
-                .replace(/\((.*?)\)/g, '(?:$1)?')
+                .replace(/\((.*)\)/g, '(?:$1)?')
                 .replace(/\/(\w*):\w+/g, '\/$1([^/]+)')
                 .replace(/\*.*/, '([^?]*).*');
             return new RegExp('^' + route + '$');
         };
 
-        this.getParams = function (reg, hash) {
-            return reg.exec(hash).slice(1);
+        this.getParams = function (reg, path) {
+            return reg.exec(path).slice(1);
         };
 
         instance = this;
