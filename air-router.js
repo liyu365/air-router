@@ -1,15 +1,35 @@
 window.airRouter = (function () {
     var instance;
 
-    function Singleton() {
+    function extend(obj1, obj2) {
+        for (var k in obj2) {
+            obj1[k] = obj2[k];
+        }
+        return obj1;
+    }
+
+    function stopDefaultAction(event) {  //这里的event已经确定是事件对象，不为空了
+        if (event.preventDefault) {
+            event.preventDefault();  //标准
+        } else {
+            event.returnValue = false;  //IE6,7,8
+        }
+    }
+
+    function Singleton(opt) {
         if (instance) {
             return instance;
         } else {
             if (!(this instanceof Singleton)) {
-                return new Singleton();
+                return new Singleton(opt);
             }
         }
 
+        this.option = {
+            useHistoryState: false,
+            baseURL: ''
+        };
+        extend(this.option, opt);
         this.routes = {};
         this.defaultPath = null;
 
@@ -43,31 +63,63 @@ window.airRouter = (function () {
                 throw Error('otherwise()方法中传入的hash没有定义对应的路由');
             }
             if (typeof this.defaultPath === 'string') {
-                location.hash = '#' + this.defaultPath;
+                if (this.option.useHistoryState) {
+                } else {
+                    location.hash = '#' + this.defaultPath;
+                }
                 this.trigger(this.defaultPath);
             }
         };
 
         this.start = function () {
             var _this = this;
-            _this.trigger(_this.getFormattedPath());
-            var oldHash = location.hash;
-            if ("onhashchange" in window.document.body) {
-                window.addEventListener('hashchange', function () {
-                    _this.trigger(_this.getFormattedPath());
-                });
-            } else {
-                setInterval(function () {
-                    if (oldHash != location.hash) {
-                        oldHash = location.hash;
-                        _this.trigger(_this.getFormattedPath());
+            if (_this.option.useHistoryState) {
+                if ('pushState' in history) {
+                    //todo 根据baseURL获取url中的路由path
+                    //_this.trigger(_this.getFormattedPath());
+                    window.onpopstate = function (event) {
+                        if (event.state) {
+                            _this.trigger(event.state.path);
+                        }
+                    };
+                    for (var i = 0, len = _this.option.links.length; i < len; i++) {
+                        _this.option.links[i].onclick = function (e) {
+                            var e = e || window.event;
+                            stopDefaultAction(e);
+                            var path = this.pathname;
+                            window.history.pushState({path: path}, document.title, path !== '/' ? _this.option.baseURL + path : _this.option.baseURL);
+                            _this.trigger(path);
+                        }
                     }
-                }, 100);
+                } else {
+                    throw Error('此浏览器不支持pushState');
+                }
+            } else {
+                _this.trigger(_this.getFormattedPath());
+                var oldHash = location.hash;
+                if ("onhashchange" in window.document.body) {
+                    window.addEventListener('hashchange', function () {
+                        _this.trigger(_this.getFormattedPath());
+                    });
+                } else {
+                    setInterval(function () {
+                        if (oldHash != location.hash) {
+                            oldHash = location.hash;
+                            _this.trigger(_this.getFormattedPath());
+                        }
+                    }, 100);
+                }
             }
         };
 
-        this.getFormattedPath = function(){
-            return location.hash.slice(1).replace(/\?.*/, '');
+        this.getFormattedPath = function () {
+            var _this = this;
+            if (_this.option.useHistoryState) {
+                var path = location.href.replace(/\?.*/, '');
+                return path;
+            } else {
+                return location.hash.slice(1).replace(/\?.*/, '');
+            }
         };
 
         /**

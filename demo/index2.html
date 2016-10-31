@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
-    <title>ari-router demo(利用hashChange)</title>
+    <title>ari-router demo(利用pushState)</title>
     <script src="../air-router.js"></script>
     <style>
         body{font-size: 20px;}
@@ -11,20 +11,19 @@
         a{color:#000;}
         #print_w{background:#AAD2F0;border-radius:30px;padding:50px;margin-top:20px;}
         #info_w{padding:20px 0;}
-        .btn{color:#AAD2F0;}
     </style>
 </head>
 <body>
 
-<a href="#/">匹配 /</a>
+<a href="/">匹配 /</a>
 <br/>
-<a href="#/news/">匹配 /news/</a>
+<a href="/news/">匹配 /news/</a>
 <br/>
-<a href="#/news/22/1">匹配 /news/:category(/:id)</a>
+<a href="/news/22/1">匹配 /news/:category(/:id)</a>
 <br/>
-<a href="#/news/22">匹配 /news/:category(/:id)</a>
+<a href="/news/22">匹配 /news/:category(/:id)</a>
 <br/>
-<a href="#/order/serch">匹配 /order/*</a>
+<a href="/order/search">匹配 /order/*</a>
 
 <div id="print_w">
     回调中输出的结果（观察地址栏的变化）：
@@ -32,11 +31,12 @@
 </div>
 
 
-<a href="./index2.html" target="_blank" class="btn">查看使用pushState的DEMO</a>
-
-
 <script>
-    var router = airRouter();
+    var router = airRouter({
+        useHistoryState: true,
+        links: document.querySelectorAll('a[href]'),
+        baseURL: ''
+    });
     router.when('/', function () {
         print_info('匹配根路径');
     }).when('/news/', function () {
