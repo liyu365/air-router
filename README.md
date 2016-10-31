@@ -26,12 +26,11 @@ router.when('/', function () {
 }).otherwise('/').start();
 ```
 
-另外，可以通过配置项`useHistoryState`开启popState事件的路由，例如：
+另外，可以通过配置项`useHistoryState`开启监听popState事件的路由，例如：
 
 ```
 var router = airRouter({
-    useHistoryState: true,     //开启popState事件的监听
-    links: document.querySelectorAll('a[href]'),   //需要进行pushState的按钮
-    baseURL: ''  //单页页面本身的真实url
+    useHistoryState: true,                        //开启popState事件的监听
+    links: document.querySelectorAll('a[href]')   //需要进行pushState的按钮
 });
 ```
