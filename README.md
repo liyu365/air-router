@@ -34,3 +34,5 @@ var router = airRouter({
     links: document.querySelectorAll('a[href]')   //需要进行pushState的按钮
 });
 ```
+
+Under MIT Liscese. Copyright (c) 李昱(liyu365)
