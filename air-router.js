@@ -29,7 +29,6 @@ window.airRouter = (function () {
         };
 
         this.trigger = function (path) {
-            var path = path.replace(/\?.*/, '');
             var routes = this.routes;
             for (var route in routes) {
                 if (routes[route].regexp.test(path)) {
@@ -68,7 +67,7 @@ window.airRouter = (function () {
         };
 
         this.getFormattedPath = function(){
-            return location.hash.slice(1);
+            return location.hash.slice(1).replace(/\?.*/, '');
         };
 
         /**
