@@ -26,8 +26,7 @@ window.airRouter = (function () {
         }
 
         this.option = {
-            useHistoryState: false,
-            baseURL: ''
+            useHistoryState: false
         };
         extend(this.option, opt);
         this.routes = {};
@@ -75,7 +74,7 @@ window.airRouter = (function () {
             var _this = this;
             if (_this.option.useHistoryState) {
                 if ('pushState' in history) {
-                    //todo 根据baseURL获取url中的路由path
+                    //todo 根据初始url获取url中的路由path
                     //_this.trigger(_this.getFormattedPath());
                     window.onpopstate = function (event) {
                         if (event.state) {
@@ -86,9 +85,14 @@ window.airRouter = (function () {
                         _this.option.links[i].onclick = function (e) {
                             var e = e || window.event;
                             stopDefaultAction(e);
-                            var path = this.pathname;
-                            window.history.pushState({path: path}, document.title, path);
-                            _this.trigger(path);
+                            var path = this.getAttribute('href');
+                            if (path !== null) {
+                                if (history.state && history.state.path === path) {
+                                    return;
+                                }
+                                window.history.pushState({path: path}, document.title, path);
+                                _this.trigger(path);
+                            }
                         }
                     }
                 } else {
@@ -115,8 +119,7 @@ window.airRouter = (function () {
         this.getFormattedPath = function () {
             var _this = this;
             if (_this.option.useHistoryState) {
-                var path = location.href.replace(/\?.*/, '');
-                return path;
+                return location.href.replace(/\?.*/, '');
             } else {
                 return location.hash.slice(1).replace(/\?.*/, '');
             }

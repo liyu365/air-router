@@ -11,6 +11,7 @@
         a{color:#000;}
         #print_w{background:#AAD2F0;border-radius:30px;padding:50px;margin-top:20px;}
         #info_w{padding:20px 0;}
+        .btn{color:#AAD2F0;}
     </style>
 </head>
 <body>
@@ -34,8 +35,7 @@
 <script>
     var router = airRouter({
         useHistoryState: true,
-        links: document.querySelectorAll('a[href]'),
-        baseURL: ''
+        links: document.querySelectorAll('a[href]')
     });
     router.when('/', function () {
         print_info('匹配根路径');
