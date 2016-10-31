@@ -1,6 +1,6 @@
 #air-router
 
-提供最直接的前端路由功能，采用监听hash的原理进行编写，兼容低版本浏览器(IE6+)，支持基本的匹配规则。
+提供最直接的前端路由功能，采用监听hashChange的原理进行编写，兼容低版本浏览器(IE6+)，支持基本的匹配规则。
 采用单例模式编写，可以在代码任意位置调用`airRouter()`配置路由。
 一切路由匹配规则均忽略`?`以后的查询字符串。
 
@@ -24,4 +24,14 @@ router.when('/', function () {
 }).when('/order/*', function (starString) {
     
 }).otherwise('/').start();
+```
+
+另外，可以通过配置项`useHistoryState`开启popState事件的路由，例如：
+
+```
+var router = airRouter({
+    useHistoryState: true,     //开启popState事件的监听
+    links: document.querySelectorAll('a[href]'),   //需要进行pushState的按钮
+    baseURL: ''  //单页页面本身的真实url
+});
 ```
