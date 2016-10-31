@@ -87,7 +87,7 @@ window.airRouter = (function () {
                             var e = e || window.event;
                             stopDefaultAction(e);
                             var path = this.pathname;
-                            window.history.pushState({path: path}, document.title, path !== '/' ? _this.option.baseURL + path : _this.option.baseURL);
+                            window.history.pushState({path: path}, document.title, path);
                             _this.trigger(path);
                         }
                     }
