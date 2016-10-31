@@ -37,7 +37,7 @@ window.airRouter = (function () {
                         };
                     var params = this.getParams(routes[route].regexp, path);
                     callback.apply(routes[route], params);
-                    return;
+                    return true;
                 }
             }
             if (path === this.defaultPath) {
@@ -51,21 +51,24 @@ window.airRouter = (function () {
 
         this.start = function () {
             var _this = this;
-            var path = location.hash.slice(1);
-            _this.trigger(path);
+            _this.trigger(_this.getFormattedPath());
             var oldHash = location.hash;
             if ("onhashchange" in window.document.body) {
                 window.addEventListener('hashchange', function () {
-                    _this.trigger(location.hash.slice(1));
+                    _this.trigger(_this.getFormattedPath());
                 });
             } else {
                 setInterval(function () {
                     if (oldHash != location.hash) {
                         oldHash = location.hash;
-                        _this.trigger(location.hash.slice(1));
+                        _this.trigger(_this.getFormattedPath());
                     }
                 }, 100);
             }
+        };
+
+        this.getFormattedPath = function(){
+            return location.hash.slice(1);
         };
 
         /**
