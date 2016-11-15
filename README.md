@@ -35,4 +35,6 @@ var router = airRouter({
 });
 ```
 
-**Under MIT Liscese. Copyright by 李昱(liyu365)**
+##License
+
+**Under MIT License. Copyright by 李昱(liyu365)**
