@@ -1,5 +1,7 @@
 # air-router
 
+:point_right: [演示地址](https://liyu365.github.io/air-router/demo/) 
+
 提供最直接的前端路由功能，采用监听hashChange的原理进行编写，兼容低版本浏览器(IE6+)，支持基本的匹配规则。
 采用单例模式编写，可以在代码任意位置调用`airRouter()`配置路由。
 一切路由匹配规则均忽略`?`以后的查询字符串。
